@@ -1,82 +1,40 @@
 package com.example.ebiz.myapplication.tasks;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
-import com.example.ebiz.myapplication.utils.HttpRequestUtils;
+import com.example.ebiz.myapplication.model.LoginResponse;
+import com.example.ebiz.myapplication.model.User;
 import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 /**
+ * Ask the server if the user can login.
+ *
  * Created by ebiz on 07/07/2017.
  */
-
-public class LoginTask extends AsyncTask<User, Void, Boolean> {
+public class LoginTask extends AbstractFetchTask<Boolean> {
 
     private static final String LOGIN_URL = "https://training.loicortola.com/chat-rest/1.0/connect";
 
-    private LoginCallback loginResponse;
-
-    public LoginTask(LoginCallback onLoginResponse) {
-        this.loginResponse = onLoginResponse;
+    public LoginTask(ITaskCallback<Boolean> taskCallback) {
+        super(taskCallback);
     }
 
     @Override
-    protected Boolean doInBackground(User... users) {
-        Log.i(LoginTask.class.getSimpleName(), "Try to login to server...");
-        HttpURLConnection connection = null;
-        for (User user : users) {
-            try {
-                URL loginUrl = new URL(LOGIN_URL + "/" + user.getUsername() + "/" + user.getPassword());
-                connection = (HttpURLConnection) loginUrl.openConnection();
-
-                Log.i(LoginTask.class.getSimpleName(), "Get input stream...");
-                InputStream inputStream = connection.getInputStream();
-
-                Log.i(LoginTask.class.getSimpleName(), "Read response...");
-                String response = HttpRequestUtils.streamToString(inputStream);
-                Log.i(LoginTask.class.getSimpleName(), response);
-
-                LoginStatus status = parseJsonResponse(response);
-                return status.getStatus() == 200;
-            } catch (java.io.IOException e) {
-                Log.i(LoginTask.class.getSimpleName(), "==== Failure ====");
-                e.printStackTrace();
-            }
-            finally {
-                if (connection != null) {
-                    connection.disconnect();
-                }
-            }
-        }
-        return Boolean.FALSE;
+    protected String getUrl() {
+        return LOGIN_URL;
     }
 
-    private LoginStatus parseJsonResponse(String response) {
+    @Override
+    protected Boolean parseJsonResponse(String response) {
         Gson gson = new Gson();
-        LoginStatus status = gson.fromJson(response, LoginStatus.class);
-        if (status == null) {
+        LoginResponse loginResponse = gson.fromJson(response, LoginResponse.class);
+        if (loginResponse == null) {
             Log.i(LoginTask.class.getSimpleName(), "Failed to parse to json.");
         }
         else {
-            Log.i(LoginTask.class.getSimpleName(), "Successfully parse status response:");
-            Log.i(LoginTask.class.getSimpleName(), status.toString());
+            Log.i(LoginTask.class.getSimpleName(), "Successfully parse loginResponse response:");
+            Log.i(LoginTask.class.getSimpleName(), loginResponse.toString());
         }
-        return status;
-    }
-
-    @Override
-    protected void onPostExecute(Boolean result) {
-        loginResponse.onLogin(result);
-    }
-
-    public interface LoginCallback {
-        void onLogin(boolean canLogin);
+        return loginResponse != null && loginResponse.getStatus() == 200;
     }
 }

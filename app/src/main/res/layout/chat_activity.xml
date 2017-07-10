@@ -6,19 +6,41 @@
     tools:context="com.example.ebiz.myapplication.activities.LoginActivity" >
 
     <LinearLayout
+        android:id="@+id/message_box_linear_layout"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true">
-
-        <EditText
-            android:id="@+id/message_input"
+        <RelativeLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+                <Button
+                    android:id="@+id/message_send_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="5dp"
+                    android:textColor="#ffffff"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Post" />
+                <EditText
+                    android:id="@+id/message_input"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/message_send_button"
+                    android:layout_margin="5dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textCursorDrawable="@drawable/edit_text_cursor"
+                    android:backgroundTint="@color/colorPrimaryDark"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/message_box_linear_layout"
+        android:background="@color/backgroundColor">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/messages_list"
             android:layout_width="match_parent"
@@ -26,5 +48,4 @@
             android:scrollbars="vertical">
         </android.support.v7.widget.RecyclerView>
     </LinearLayout>
-
 </RelativeLayout>

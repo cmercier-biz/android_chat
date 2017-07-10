@@ -11,8 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.ebiz.myapplication.R;
+import com.example.ebiz.myapplication.tasks.ITaskCallback;
 import com.example.ebiz.myapplication.tasks.LoginTask;
-import com.example.ebiz.myapplication.tasks.User;
+import com.example.ebiz.myapplication.model.User;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -30,40 +31,22 @@ public class LoginActivity extends AppCompatActivity {
         usernameField = (EditText) findViewById(R.id.username_field);
         passwordField = (EditText) findViewById(R.id.password_field);
         loginButton = (Button) findViewById(R.id.login_button);
-        loginButton.setVisibility(View.INVISIBLE);
-
-        usernameField.addTextChangedListener(new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // nothing to do
-            }
-
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // nothing to do
-            }
-
-            @Override public void afterTextChanged(Editable s) {
-                if (s.length() >= 3) {
-                    loginButton.setVisibility(View.VISIBLE);
-                }
-                else {
-                    loginButton.setVisibility(View.INVISIBLE);
-                }
-            }
-        });
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Editable username = usernameField.getText();
                 Editable password = passwordField.getText();
-                User user = new User(username.toString(), password.toString());
+                final User user = new User(username.toString(), password.toString());
 
-                new LoginTask(new LoginTask.LoginCallback() {
+                new LoginTask(new ITaskCallback<Boolean>() {
                     @Override
-                    public void onLogin(boolean canLogin) {
-                        if (canLogin) {
+                    public void callback(Boolean canLogin) {
+                        if (canLogin != null && canLogin) {
                             Log.i(LoginActivity.class.getSimpleName(), "Login success !");
                             Intent intent = new Intent(LoginActivity.this, ChatActivity.class);
+                            intent.putExtra(User.USERNAME_FIELD, user.getUsername());
+                            intent.putExtra(User.PASSWORD_FIELD, user.getPassword());
                             startActivity(intent);
                         } else {
                             Log.i(LoginActivity.class.getSimpleName(), "Login failed.");

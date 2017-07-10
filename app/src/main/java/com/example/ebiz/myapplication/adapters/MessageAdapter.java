@@ -7,19 +7,29 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.ebiz.myapplication.R;
+import com.example.ebiz.myapplication.model.Message;
+import com.example.ebiz.myapplication.model.MessagesResponse;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by ebiz on 07/07/2017.
  */
-
 public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
 
-    private List<String> messages;
+    private MessagesResponse messagesResponse;
 
-    public MessageAdapter(List<String> messages) {
-        this.messages = messages;
+    public MessageAdapter() {
+        List<Message> messages = new ArrayList<>();
+        messagesResponse = new MessagesResponse(messages);
+    }
+
+    public void setMessagesResponse(MessagesResponse messagesResponse) {
+        this.messagesResponse = messagesResponse;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -30,25 +40,33 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.getTextView().setText(messages.get(position));
+        holder.getUsernameView().setText(messagesResponse.getMessages().get(position).getLogin() + " :");
+        holder.getMessageView().setText(messagesResponse.getMessages().get(position).getMessage());
     }
 
     @Override
     public int getItemCount() {
-        return messages.size();
+        return messagesResponse == null ? 0 : messagesResponse.getMessages().size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView textView;
+        private TextView usernameView;
+
+        private TextView messageView;
 
         public ViewHolder(View view) {
             super(view);
-            this.textView = (TextView) view.findViewById(R.id.text_message);
+            this.usernameView = (TextView) view.findViewById(R.id.message_username_text);
+            this.messageView = (TextView) view.findViewById(R.id.message_text);
         }
 
-        public TextView getTextView() {
-            return textView;
+        public TextView getUsernameView() {
+            return usernameView;
+        }
+
+        public TextView getMessageView() {
+            return messageView;
         }
     }
 }

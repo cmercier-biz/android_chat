@@ -1,15 +1,18 @@
 package com.example.ebiz.myapplication.utils;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 
 /**
  * Created by ebiz on 07/07/2017.
  */
-
 public final class HttpRequestUtils {
+
+    public static final int OK_STATUS = 200;
 
     /**
      * @param inputStream
@@ -31,5 +34,12 @@ public final class HttpRequestUtils {
         }
 
         return result.toString();
+    }
+
+    public static void writeToStream(OutputStream outputStream, String content) throws IOException {
+        DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
+        dataOutputStream.writeBytes(content);
+        dataOutputStream.flush();
+        dataOutputStream.close();
     }
 }
