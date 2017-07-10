@@ -4,10 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.ebiz.myapplication.activities.LoginActivity"
-    android:background="@color/backgroundColor"
     >
     <LinearLayout
-        android:id="@+id/green"
+        android:id="@+id/login_header_layout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="@color/colorPrimaryDark"
@@ -16,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:text="Log in to enter the ChatRoom"
+            android:textColor="#ffffff"
             android:textStyle="bold"
             android:textSize="20sp"
             android:gravity="center"
@@ -23,12 +23,11 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/blue"
+        android:id="@+id/login_button_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:gravity="center"
-        android:background="@color/backgroundColor"
         android:layout_marginBottom="30dp"
         >
         <Button
@@ -46,24 +45,23 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/yellow"
+        android:id="@+id/login_fields"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/green"
-        android:layout_above="@id/blue"
+        android:layout_below="@id/login_header_layout"
+        android:layout_above="@id/login_button_layout"
         >
-
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/backgroundColor"
-            >
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="#ffffff"
+                android:layout_margin="10dp"
                 >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Username :"
+                    android:textSize="16sp" />
                 <EditText
                     android:id="@+id/username_field"
                     android:layout_width="match_parent"
@@ -72,6 +70,11 @@
                     android:textCursorDrawable="@drawable/edit_text_cursor"
                     android:backgroundTint="@color/colorPrimary"
                     />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Password :"
+                    android:textSize="16sp" />
                 <EditText
                     android:id="@+id/password_field"
                     android:layout_width="match_parent"
@@ -81,8 +84,12 @@
                     android:backgroundTint="@color/colorPrimary"
                     android:inputType="textPassword"
                     />
+                <TextView
+                    android:id="@+id/login_error_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/errorText"
+                    android:text="Invalid username or password"/>
             </LinearLayout>
-        </ScrollView>
-
     </LinearLayout>
 </RelativeLayout>

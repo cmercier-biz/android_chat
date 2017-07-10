@@ -1,6 +1,7 @@
 package com.example.ebiz.myapplication.activities;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +22,9 @@ import com.example.ebiz.myapplication.tasks.PostMessageTask;
 
 import java.util.UUID;
 
+/**
+ * Chat activity : allow to see and post messages
+ */
 public class ChatActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -47,7 +51,7 @@ public class ChatActivity extends AppCompatActivity {
         final User user = new User(getIntent().getStringExtra(User.USERNAME_FIELD),
                 getIntent().getStringExtra(User.PASSWORD_FIELD));
 
-        fetchMessages(user);
+        periodicallyFetchMessages(user);
 
         // === Handle send messages ===
         messageInput = (EditText) findViewById(R.id.message_input);
@@ -67,6 +71,17 @@ public class ChatActivity extends AppCompatActivity {
                 }).execute(messageRequest);
             }
         });
+    }
+
+    private void periodicallyFetchMessages(final User user) {
+        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                fetchMessages(user);
+                periodicallyFetchMessages(user);
+            }
+        }, 5000);
     }
 
     private void fetchMessages(User user) {
